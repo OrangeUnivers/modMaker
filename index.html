@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedrock Mod Maker</title>
+    <link rel="icon" type="image/x-icon" href="faviconModMaker.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/87b26c3ff4.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #3d3d3d;
+            /* overflow-y: hidden; */
+        }
+        .elements {
+            width: 300px;
+            height: calc(100vh - 30px);
+            background-color: #333333;
+            border-radius: 15px 0px 15px 15px;
+        }
+        .element_holder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
+            max-height: calc(100vh - 70px);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .element_holder::-webkit-scrollbar {
+            width: 8px;
+        }
+        .element_holder::-webkit-scrollbar-track {
+            background-color: #555555;
+            border-radius: 5px;
+        }
+        .element_holder::-webkit-scrollbar-thumb {
+            background-color: #888888;
+            border-radius: 5px;
+        }
+        .element_holder::-webkit-scrollbar-thumb:hover {
+            background-color: #aaaaaa;
+        }
+        .element {
+            width: 100%;
+            height: 65px;
+            border-radius: 15px;
+            background-color: #2f2f2f;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            user-select: none;
+        }
+        .element.locked {
+            cursor: not-allowed;
+        }
+        .elements_divisor {
+            color: #7c7c7c;
+            font-family: Nunito;
+            font-weight: 700;
+            font-size: 20px;
+            user-select: none;
+        }
+        .element .image_container {
+            position: relative;
+            border-radius: 10px;
+            margin: 5px;
+            width: 55px;
+            height: 55px;
+            background-color: #333333;
+            transition: color 0.2s, font-size 0.2s;
+            color: #7c7c7c;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        .element .image_container .locked_icon {
+            position: absolute;
+            font-size: 15px;
+            padding-right: 30px;
+            padding-bottom: 30px;
+            color: #924141;
+        }
+        .element .image_container .beta {
+            position: absolute;
+            font-size: 12px;
+            margin-left: 20px;
+            margin-bottom: 40px;
+            color: #ffffff;
+            font-family: Nunito;
+            font-weight: 700;
+            background-color: orange;
+            border-radius: 2px;
+            line-height: 11px;
+            padding: 1px;
+            padding-bottom: 0.5px;
+        }
+        .element:hover .image_container {
+            color: #a2a2a2;
+            font-size: 32px;
+        }
+        .element.locked .image_container {
+            color: #525252;
+        }
+        .element.locked:hover .image_container {
+            color: #6d4646;
+        }
+        .element .desc {
+            margin: 5px;
+            margin-left: 0px;
+            padding-top: 3px;
+            transition: color 0.2s, font-size 0.2s;
+            color: #7c7c7c;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            font-family: Nunito;
+            font-size: 12px;
+            line-height: 12px;
+        }
+        .element .desc name {
+            font-size: 18px;
+            font-weight: 700;
+            transition: font-weight 0.2s, color 0.2s;
+            margin-bottom: 3px;
+        }
+        .element:hover .desc name {
+            font-weight: 800;
+            color: #a2a2a2;
+        }
+        .element.locked .desc {
+            color: #525252;
+        }
+        .element.locked:hover .desc name {
+            color: #6d4646;
+        }
+        .element.locked:hover .desc {
+            color: #6d4646;
+        }
+        #add_element_button {
+            width: 60px;
+            height: 60px;
+            background-color: #333333;
+            border-radius: 0px 15px 15px 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7c7c7c;
+            transition: color 0.2s, font-size 0.2s, width 0.3s;
+            font-size: 20px;
+        }
+        #add_element_button:hover {
+            color: #a2a2a2;
+            font-size: 22px;
+        }
+        #add_element_button_plus {
+            transition: transform 0.5s, margin-right 0.3s;
+        }
+        .concave-corner {
+            background-color: #333333;
+            clip-path: url(#inward-circle);
+            transition: clip-path 0.5s ease-in-out, width 0.3s, height 0.3s;
+            padding: 0;
+        }
+        #sidebar {
+            top: 0;
+            left: 0;
+            position: fixed;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-top: 15px;
+            margin-left: 15px;
+            transform: translateX(-315px);
+            transition: transform 0.3s;
+        }
+        #objectList {
+            padding: 25px;
+            display: grid;
+            gap: 10px;
+        }
+        .objectElement {
+            background-color: #3d3d3d;
+            height: 75px;
+            border-radius: 15px;
+            border: #04350a 3px solid;
+            transition: border-color 0.3s;
+            user-select: none;
+        }
+        .objectElement:hover {
+            border-color: #00790e;
+        }
+        .objectIcon {
+            height: 55px;
+            width: 55px;
+            background-color: #2f2f2f;
+            border-radius: 5px;
+            margin: 10px;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <div style="position: fixed;">
+        <svg width="0" height="0">
+            <defs>
+                <clipPath id="inward-circle" clipPathUnits="objectBoundingBox">
+                    <path d="M0,0 H1 A1,1,0,0,0,0,1 Z"/>
+                </clipPath>
+            </defs>
+        </svg>
+    </div>
+    
+    <div id="sidebar">
+        <div class="elements">
+            <div style="padding: 20px;">
+                <div class="element_holder">
+                    <div class="elements_divisor">----- ADD OBJECTS -----</div>
+                    <div class="element" aria-label="Add block">
+                        <div class="image_container">
+                            <i class="fa-solid fa-cube"></i>
+                            <div class="beta">BETA</div>
+                        </div>
+                        <div class="desc">
+                            <name>Blocks</name>
+                            Blocks are the foundation of the world. Use them to build structures, terrain, and more.
+                        </div>
+                    </div>
+                    <div class="element locked" aria-label="Add item (locked)">
+                        <div class="image_container">
+                            <i class="fa-solid fa-wrench"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                        </div>
+                        <div class="desc">
+                            <name>Items</name>
+                            Tools, resources, and objects for crafting, fighting, and survival.
+                        </div>
+                    </div>
+                    <div class="element locked" aria-label="Add recipe (locked)">
+                        <div class="image_container">
+                            <i class="fa-solid fa-book-open"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                        </div>
+                        <div class="desc">
+                            <name>Recipes</name>
+                            Combine ingredients to craft various useful items.
+                        </div>
+                    </div>
+                    <div class="element locked" aria-label="Add entity (locked)">
+                        <div class="image_container">
+                            <i class="fa-solid fa-person"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                        </div>
+                        <div class="desc">
+                            <name>Entities</name>
+                            Interactive elements like mobs, animals, and NPCs in the game.
+                        </div>
+                    </div>
+                    <div class="element locked" aria-label="Add command (locked)">
+                        <div class="image_container">
+                            <i class="fa-solid fa-terminal"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                        </div>
+                        <div class="desc">
+                            <name>Commands</name>
+                            Control the game with text commands to automate tasks and customize gameplay.
+                        </div>
+                    </div>
+                    <div class="element locked" aria-label="Edit lang files (locked)">
+                        <div class="image_container">
+                            <i class="fa-solid fa-file-lines"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                        </div>
+                        <div class="desc">
+                            <name>Lang</name>
+                            Change how text is displayed between languages.
+                        </div>
+                    </div><br>
+                    <div class="elements_divisor">---- EDIT TEXTURES ----</div>
+                    <div class="element locked" aria-label="Edit blocks (locked)">
+                        <div class="image_container">
+                            <i class="fa-solid fa-cube"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                        </div>
+                        <div class="desc">
+                            <name>Blocks</name>
+                            Edit the look of already existing block ingame.
+                        </div>
+                    </div>
+                    <div class="element locked" aria-label="Edit items (locked)">
+                        <div class="image_container">
+                            <i class="fa-solid fa-wrench"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                        </div>
+                        <div class="desc">
+                            <name>Items</name>
+                            Change the Appearence of an existing item.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+            <div id="add_element_button" aria-label="Toggle sidebar">
+                <i class="fa-solid fa-plus fa-xl" id="add_element_button_plus"></i>
+            </div>
+            <div class="concave-corner" style="width: 0; height: 0;" id="add_element_button_corner"></div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: center; width: 100%; padding-top: 30px; padding-bottom: 10px;"><img src="iconModMaker.png" alt="" height="70px"></div>
+    <div style="width: calc(100% - 20px); height: calc(100vh - 130px); padding: 10px;">
+        <div style="margin: 20px; background-color: #4b4b4b; height: calc(100% - 40px); border-radius: 20px;">
+            <div id="objectList">
+                <div class="objectElement">
+                    <div class="objectIcon"></div>
+                    <div class="objectText">
+                        <name>Superblock</name>
+                        very cool
+                    </div>
+                </div>
+                <div class="objectElement">
+                    Hehe
+                </div>
+                <div class="objectElement">
+                    Hehe
+                </div>
+                <div class="objectElement">
+                    Hehe
+                </div>
+                <div class="objectElement">
+                    Hehe
+                </div>
+                <div class="objectElement">
+                    Hehe
+                </div>
+                <div class="objectElement">
+                    Hehe
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let openSidebar = false;
+        function toggleSidebar() {
+            if (openSidebar) {
+                document.getElementById("sidebar").style.transform = "translateX(-315px)";
+                document.getElementById("add_element_button_plus").style.transform = "";
+                document.getElementById("add_element_button_plus").style.marginRight = "0px";
+                document.getElementById("add_element_button").style.width = "60px";
+                document.getElementById("add_element_button_corner").style.width = "0px";
+                document.getElementById("add_element_button_corner").style.height = "0px";
+            } else {
+                document.getElementById("sidebar").style.transform = "translateX(0)";
+                document.getElementById("add_element_button_plus").style.transform = "rotate(45deg)";
+                document.getElementById("add_element_button_plus").style.marginRight = "20px";
+                document.getElementById("add_element_button").style.width = "40px";
+                document.getElementById("add_element_button_corner").style.width = "20px";
+                document.getElementById("add_element_button_corner").style.height = "20px";
+            }
+            openSidebar = !openSidebar
+        }
+        document.getElementById("add_element_button").addEventListener("click", function() {
+            toggleSidebar()
+        });
+        function updateWidthGrid() {
+            console.log("hjkasd")
+            var objectList = document.getElementById("objectList");
+            // if (window.innerWidth >= 1830) {
+            //     objectList.style.gridTemplateColumns = "calc((100% - 25px)/5) calc((100% - 25px)/5) calc((100% - 25px)/5) calc((100% - 25px)/5) calc((100% - 25px)/5)";
+            // }
+            // if (window.innerWidth < 1830) {
+            //     objectList.style.gridTemplateColumns = "calc((100% - 25px)/4) calc((100% - 25px)/4) calc((100% - 25px)/4) calc((100% - 25px)/4)";
+            // }
+            // if (window.innerWidth < 1382) {
+            //     objectList.style.gridTemplateColumns = "calc((100% - 25px)/3) calc((100% - 25px)/3) calc((100% - 25px)/3)";
+            // }
+            // if (window.innerWidth < 300) {
+            //     objectList.style.gridTemplateColumns = "calc((100% - 25px)/2) calc((100% - 25px)/2)";
+            // }
+            // if (window.innerWidth < 200) {
+            //     objectList.style.gridTemplateColumns = "calc(100% - 25px)";
+            // }
+            objectList.style.gridTemplateColumns = "200px";
+        }
+        updateWidthGrid();
+        window.addEventListener('resize', updateWidthGrid);
+    </script>
+</body>
+</html>
