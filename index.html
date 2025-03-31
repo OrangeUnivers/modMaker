@@ -214,6 +214,7 @@
             border: #04350a 3px solid;
             transition: border-color 0.3s, color 0.3s;
             user-select: none;
+            cursor: pointer;
             font-family: Nunito;
             color: #7c7c7c;
         }
@@ -433,7 +434,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <script type="text/javascript">
         let openSidebar = false;
         function combineToString(str, amount, separator = "") {
             let endStr = "";
@@ -500,6 +501,10 @@
         }
         updateWidthGrid();
         window.addEventListener('resize', updateWidthGrid);
+
+        function addObjectDom(opjectType = str) {
+            console.log(objectType)
+        }
     </script>
 </body>
 </html>
