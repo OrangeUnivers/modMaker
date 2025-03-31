@@ -259,7 +259,7 @@
             <div style="padding: 20px;">
                 <div class="element_holder">
                     <div class="elements_divisor">----- ADD OBJECTS -----</div>
-                    <div class="element" aria-label="Add block">
+                    <div class="element" aria-label="Add block" onclick="addObjectDom('add_block')">
                         <div class="image_container">
                             <i class="fa-solid fa-cube"></i>
                             <div class="beta">BETA</div>
@@ -269,7 +269,7 @@
                             Blocks are the foundation of the world. Use them to build structures, terrain, and more.
                         </div>
                     </div>
-                    <div class="element locked" aria-label="Add item (locked)">
+                    <div class="element locked" aria-label="Add item (locked)" onclick="addObjectDom('add_item')">
                         <div class="image_container">
                             <i class="fa-solid fa-wrench"></i>
                             <i class="fa-solid fa-lock locked_icon"></i>
@@ -279,7 +279,7 @@
                             Tools, resources, and objects for crafting, fighting, and survival.
                         </div>
                     </div>
-                    <div class="element locked" aria-label="Add recipe (locked)">
+                    <div class="element locked" aria-label="Add recipe (locked)" onclick="addObjectDom('add_recipe')">
                         <div class="image_container">
                             <i class="fa-solid fa-book-open"></i>
                             <i class="fa-solid fa-lock locked_icon"></i>
@@ -289,7 +289,7 @@
                             Combine ingredients to craft various useful items.
                         </div>
                     </div>
-                    <div class="element locked" aria-label="Add entity (locked)">
+                    <div class="element locked" aria-label="Add entity (locked)" onclick="addObjectDom('add_entity')">
                         <div class="image_container">
                             <i class="fa-solid fa-person"></i>
                             <i class="fa-solid fa-lock locked_icon"></i>
@@ -299,7 +299,7 @@
                             Interactive elements like mobs, animals, and NPCs in the game.
                         </div>
                     </div>
-                    <div class="element locked" aria-label="Add command (locked)">
+                    <div class="element locked" aria-label="Add command (locked)" onclick="addObjectDom('add_command')">
                         <div class="image_container">
                             <i class="fa-solid fa-terminal"></i>
                             <i class="fa-solid fa-lock locked_icon"></i>
@@ -309,7 +309,7 @@
                             Control the game with text commands to automate tasks and customize gameplay.
                         </div>
                     </div>
-                    <div class="element locked" aria-label="Edit lang files (locked)">
+                    <div class="element locked" aria-label="Add lang file (locked)" onclick="addObjectDom('add_lang')">
                         <div class="image_container">
                             <i class="fa-solid fa-file-lines"></i>
                             <i class="fa-solid fa-lock locked_icon"></i>
@@ -320,7 +320,7 @@
                         </div>
                     </div><br>
                     <div class="elements_divisor">---- EDIT TEXTURES ----</div>
-                    <div class="element locked" aria-label="Edit blocks (locked)">
+                    <div class="element locked" aria-label="Edit blocks (locked)" onclick="addObjectDom('edit_block_texture')">
                         <div class="image_container">
                             <i class="fa-solid fa-cube"></i>
                             <i class="fa-solid fa-lock locked_icon"></i>
@@ -330,7 +330,7 @@
                             Edit the look of already existing block ingame.
                         </div>
                     </div>
-                    <div class="element locked" aria-label="Edit items (locked)">
+                    <div class="element locked" aria-label="Edit items (locked)" onclick="addObjectDom('edit_item_texture')">
                         <div class="image_container">
                             <i class="fa-solid fa-wrench"></i>
                             <i class="fa-solid fa-lock locked_icon"></i>
@@ -434,8 +434,9 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
+    <script>
         let openSidebar = false;
+        let modElements = [];
         function combineToString(str, amount, separator = "") {
             let endStr = "";
             for (let i = 0; i < amount; i++) {
@@ -501,9 +502,40 @@
         }
         updateWidthGrid();
         window.addEventListener('resize', updateWidthGrid);
+        function generateGridElements() {
+            document.getElementById("objectList").innerHTML = "";
+            modElements.forEach((i, v) => {
+                let newElement = document.createElement("div");
+                newElement.classList = "objectElement";
+                newElement.innerHTML = `
+                    <div class="objectIcon"></div>
+                    <div class="objectText">
+                        <name>${i.name}</name>
+                        ${i.desc}
+                    </div>`
 
-        function addObjectDom(opjectType = str) {
-            console.log(objectType)
+                // <div class="objectElement">
+                //     <div class="objectIcon"></div>
+                //     <div class="objectText">
+                //         <name>Superblock</name>
+                //         very cool very very nice
+                //     </div>
+                // </div>
+                document.getElementById("objectList").appendChild(newElement);
+            });
+        }
+        generateGridElements()
+        /**
+         * Makes me insane.
+         * @param {string} elementType
+         */
+        function addObjectDom(elementType) {
+            switch(elementType) {
+                case ("add_block"):
+                    modElements.push({name: "Superblock", desc: "A very, very cool block."})
+                    generateGridElements()
+                    break;
+            }
         }
     </script>
 </body>
