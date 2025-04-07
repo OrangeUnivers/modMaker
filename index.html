@@ -15,6 +15,10 @@
             background-color: #3d3d3d;
             /* overflow-y: hidden; */
         }
+        emoji {
+            font-size: 30px;
+            display: block;
+        }
         .elements {
             width: 300px;
             height: calc(100vh - 30px);
@@ -219,7 +223,7 @@
             background-color: #3d3d3d;
             height: 75px;
             border-radius: 15px;
-            border: #04350a 3px solid;
+            border: #2c2c2c 3px solid;
             transition: border-color 0.3s, color 0.3s;
             user-select: none;
             cursor: pointer;
@@ -227,8 +231,20 @@
             color: #7c7c7c;
         }
         .objectElement:hover {
-            border-color: #00790e;
+            border-color: #7c7c7c;
             color: #a2a2a2;
+        }
+        .objectElement.added {
+            border: #04350a 3px solid;
+        }
+        .objectElement.added:hover {
+            border-color: #00790e;
+        }
+        .objectElement.edited {
+            border: #4a1900 3px solid;
+        }
+        .objectElement.edited:hover {
+            border-color: #8a4800;
         }
         .objectIcon {
             height: 55px;
@@ -273,6 +289,48 @@
             opacity: 0;
             transition: opacity 0.2s;
             pointer-events: all;
+            font-family: Nunito;
+            color: #7c7c7c;
+        }
+        #titleCard {
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #3d3d3d;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            pointer-events: all;
+            transition: opacity 0.3s;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+        #titleCardImage {
+            transition: width 0.3s, height 0.3s;
+        }
+        #titleCardButton {
+            background-color: #333333;
+            font-family: Nunito;
+            font-size: 1.8rem;
+            margin: 10px;
+            padding-inline: 18px;
+            padding-block: 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #a2a2a2;
+            cursor: pointer;
+            transition: color 0.3s, border-radius 0.3s, padding-inline 0.3s, transform 0.3s;
+            white-space: nowrap;
+        }
+        #titleCardButton:hover {
+            color: #cacaca;
+            padding-inline: 22px;
+            border-radius: 16px;
         }
     </style>
 </head>
@@ -400,10 +458,31 @@
     </div>
     <div id="objectCreationMenuContainer">
         <div id="objectCreationMenu">
-            
         </div>
     </div>
+    <div id="titleCard">
+        <img id="titleCardImage" src="iconModMaker.png" alt="Mod maker icon" style="width: 60%;">
+        <div id="titleCardButton">Click to Start</div>
+    </div>
     <script>
+        //check for Navigation Timing API support
+        let reloadedPage;
+        if (window.performance) {
+            if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+                reloadedPage = true;
+            } else {
+                reloadedPage = false;
+            }
+        } else {
+            reloadedPage = false;
+        }
+        if (reloadedPage) {
+            document.getElementById("titleCardImage").style.transition = "";
+            document.getElementById("titleCard").style.transition = "";
+            document.getElementById("titleCard").style.opacity = 0;
+            document.getElementById("titleCard").style.pointerEvents = "none";
+        }
+        console.info(reloadedPage);
         let openSidebar = false;
         let openObjectCreatorMenu = false;
         let transitioningOpenObjectCreator = false;
@@ -453,35 +532,16 @@
             toggleSidebar()
         });
         function updateWidthGrid() {
-            console.log("hjkasd")
             var objectList = document.getElementById("objectList");
             let objectAmount = 20;
             while (true) {
-                console.log("hjkasd")
                 if (window.innerWidth > 110 + (200 * objectAmount)) {
                     let newValue = combineToString("calc((100% - " + ((objectAmount-1)*10) + "px)/" + objectAmount.toString() + ")", objectAmount, " ");
                     objectList.style.gridTemplateColumns = newValue;
-                    console.log(newValue);
                     break;
                 }
                 objectAmount --;
             }
-            // if (window.innerWidth >= 1830) {
-            //     objectList.style.gridTemplateColumns = "calc((100% - 25px)/5) calc((100% - 25px)/5) calc((100% - 25px)/5) calc((100% - 25px)/5) calc((100% - 25px)/5)";
-            // }
-            // if (window.innerWidth < 1830) {
-            //     objectList.style.gridTemplateColumns = "calc((100% - 25px)/4) calc((100% - 25px)/4) calc((100% - 25px)/4) calc((100% - 25px)/4)";
-            // }
-            // if (window.innerWidth < 1382) {
-            //     objectList.style.gridTemplateColumns = "calc((100% - 25px)/3) calc((100% - 25px)/3) calc((100% - 25px)/3)";
-            // }
-            // if (window.innerWidth < 300) {
-            //     objectList.style.gridTemplateColumns = "calc((100% - 25px)/2) calc((100% - 25px)/2)";
-            // }
-            // if (window.innerWidth < 110+200) {
-            //     objectList.style.gridTemplateColumns = "calc(100% - 25px)";
-            // }
-            // objectList.style.gridTemplateColumns = "200px";
         }
         updateWidthGrid();
         window.addEventListener('resize', updateWidthGrid);
@@ -489,30 +549,74 @@
             document.getElementById("objectList").innerHTML = "";
             modElements.forEach((i, v) => {
                 let newElement = document.createElement("div");
-                newElement.classList = "objectElement";
+                let classOperationType;
+                if (i.operation) {
+                    switch (i.operation) {
+                        case ("added"):
+                            classOperationType = "objectElement added";
+                            break;
+                        case ("edited"):
+                            classOperationType = "objectElement edited";
+                            break;
+                        default:
+                            classOperationType = "objectElement";
+                            break;
+                    }
+                } else {
+                    classOperationType = "objectElement";
+                }
+                newElement.classList = classOperationType;
                 newElement.innerHTML = `
                     <div class="objectIcon"></div>
                     <div class="objectText">
                         <name>${i.name}</name>
                         ${i.desc}
                     </div>`
-
-                // <div class="objectElement">
-                //     <div class="objectIcon"></div>
-                //     <div class="objectText">
-                //         <name>Superblock</name>
-                //         very cool very very nice
-                //     </div>
-                // </div>
                 document.getElementById("objectList").appendChild(newElement);
             });
         }
         generateGridElements()
         /**
-         * Makes me insane.
-         * @param {string} elementType
+         * configures the object creator
+         * @param {string} objectType
          */
-        function toggleObjectCreator(enabled = undefined) {
+        function configureObjectCreator(objectType) {
+            let objectCreatorMenuDOM = document.getElementById("objectCreationMenu");
+            objectCreatorMenuDOM.innerHTML = "";
+            let creatorContainer = document.createElement("div");
+            switch (objectType) {
+                case ("error"):
+                    creatorContainer.style.width = "100%";
+                    creatorContainer.style.height = "100%";
+                    creatorContainer.style.display = "flex";
+                    creatorContainer.style.justifyContent = "center";
+                    creatorContainer.style.alignItems = "center";
+                    creatorContainer.style.flexDirection = "column";
+                    creatorContainer.style.fontSize = "20px";
+                    creatorContainer.style.fontWeight = 700;
+                    creatorContainer.innerHTML = "Something went wrong...<emoji>🧐</emoji>";
+                    objectCreatorMenuDOM.appendChild(creatorContainer)
+                    break;
+                case ("locked"):
+                    creatorContainer.style.width = "100%";
+                    creatorContainer.style.height = "100%";
+                    creatorContainer.style.display = "flex";
+                    creatorContainer.style.justifyContent = "center";
+                    creatorContainer.style.alignItems = "center";
+                    creatorContainer.style.flexDirection = "column";
+                    creatorContainer.style.fontSize = "20px";
+                    creatorContainer.style.fontWeight = 700;
+                    creatorContainer.innerHTML = "Sorry this feature doesn't exist yet...<emoji>😔</emoji>";
+                    objectCreatorMenuDOM.appendChild(creatorContainer)
+                    break;
+            }
+        }
+        /**
+         * Makes me insane.
+         * @param {boolean} [enabled]
+         * @param {string} [objectType]
+         */
+        function toggleObjectCreator(enabled = undefined, objectType = undefined) {
             if (transitioningOpenObjectCreator) {
                 return;
             }
@@ -530,6 +634,12 @@
             let objectCreatorMenuDOMContainer = document.getElementById("objectCreationMenuContainer");
             let objectCreatorMenuDOM = document.getElementById("objectCreationMenu");
             if (changeTo) {
+                if (objectType == undefined) {
+                    console.warn("The object creator has been activated without any object type to show. Using error screen as default value.")
+                    configureObjectCreator("error");
+                } else {
+                    configureObjectCreator(objectType);
+                }
                 objectCreatorMenuDOMContainer.style.display = "flex";
                 setTimeout(()=>{
                     objectCreatorMenuDOMContainer.style.opacity = 1;
@@ -552,7 +662,7 @@
             }
         }
         document.getElementById("objectCreationMenuContainer").addEventListener('click', ()=>{
-            toggleObjectCreator();
+            toggleObjectCreator(false);
         });
         document.getElementById("sidebarWhitespace").addEventListener('click', ()=>{
             toggleSidebar(false);
@@ -560,11 +670,44 @@
         function addObjectDom(elementType) {
             switch(elementType) {
                 case ("add_block"):
-                    modElements.push({name: "Superblock", desc: "A very, very cool block."})
-                    generateGridElements()
-                    toggleObjectCreator()
+                    modElements.push({name: "Superblock", desc: "A very, very cool block.", operation: "added"})
+                    toggleObjectCreator(true)
+                    break;
+                case ("add_item"):
+                    modElements.push({name: "Superitem", desc: "A very, very cool item.", operation: "added"})
+                    toggleObjectCreator(true, "locked")
+                    break;
+                case ("add_recipe"):
+                    toggleObjectCreator(true, "locked")
+                    break;
+                case ("add_entity"):
+                    toggleObjectCreator(true, "locked")
+                    break;
+                case ("add_command"):
+                    toggleObjectCreator(true, "locked")
+                    break;
+                case ("add_lang"):
+                    toggleObjectCreator(true, "locked")
+                    break;
+                case ("edit_block_texture"):
+                    modElements.push({name: "Grass Block", desc: "It looks cooler now.", operation: "edited"})
+                    toggleObjectCreator(true, "locked")
+                    break;
+                case ("edit_item_texture"):
+                    toggleObjectCreator(true, "locked")
                     break;
             }
+            generateGridElements()
+        }
+        if (!reloadedPage) {
+            document.getElementById("titleCardButton").addEventListener('click', ()=>{
+                document.getElementById("titleCardImage").style.width = "10px";
+                document.getElementById("titleCardButton").style.transform = "scaleX(0.2)";
+                document.getElementById("titleCard").style.opacity = 0;
+                setTimeout(()=>{
+                    document.getElementById("titleCard").style.pointerEvents = "none";
+                }, 3000);
+            });
         }
     </script>
 </body>
