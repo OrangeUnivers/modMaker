@@ -109,6 +109,20 @@
             padding: 1px;
             padding-bottom: 0.5px;
         }
+        .element .image_container .broken {
+            position: absolute;
+            font-size: 12px;
+            margin-left: 20px;
+            margin-bottom: 40px;
+            color: #ffffff;
+            font-family: Nunito;
+            font-weight: 700;
+            background-color: red;
+            border-radius: 2px;
+            line-height: 11px;
+            padding: 1px;
+            padding-bottom: 0.5px;
+        }
         .element:hover .image_container {
             color: #a2a2a2;
             font-size: 32px;
@@ -410,6 +424,17 @@
                             <name>Lang</name>
                             Change how text is displayed between languages.
                         </div>
+                    </div>
+                    <div class="element locked" aria-label="Add biome (broken)" onclick="addObjectDom('add_biome')">
+                        <div class="image_container">
+                            <i class="fa-solid fa-terminal"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                            <div class="broken">BROKEN</div>
+                        </div>
+                        <div class="desc">
+                            <name>Biomes</name>
+                            Changes how Minecraft generates the world.
+                        </div>
                     </div><br>
                     <div class="elements_divisor">---- EDIT TEXTURES ----</div>
                     <div class="element locked" aria-label="Edit blocks (locked)" onclick="addObjectDom('edit_block_texture')">
@@ -704,6 +729,9 @@
                     toggleObjectCreator(true, "locked")
                     break;
                 case ("add_lang"):
+                    toggleObjectCreator(true, "locked")
+                    break;
+                case ("add_biome"):
                     toggleObjectCreator(true, "locked")
                     break;
                 case ("edit_block_texture"):
