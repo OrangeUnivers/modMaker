@@ -458,6 +458,11 @@
     </div>
     <div id="objectCreationMenuContainer">
         <div id="objectCreationMenu">
+            <div style="width: calc(100% - 20px); height: calc(100% - 20px); margin: 10px;">
+                <div style="height: 150px; width: 100%; border-radius: 10px; background-color: red;">
+                    
+                </div>
+            </div>
         </div>
     </div>
     <div id="titleCard">
@@ -579,23 +584,17 @@
         /**
          * configures the object creator
          * @param {string} objectType
+         * @param {boolean} testing
          */
-        function configureObjectCreator(objectType) {
+        function configureObjectCreator(objectType, testing = false) {
             let objectCreatorMenuDOM = document.getElementById("objectCreationMenu");
-            objectCreatorMenuDOM.innerHTML = "";
+            if (!testing) {
+                objectCreatorMenuDOM.innerHTML = "";
+            }
             let creatorContainer = document.createElement("div");
+            let containerObjects = {};
             switch (objectType) {
-                case ("error"):
-                    creatorContainer.style.width = "100%";
-                    creatorContainer.style.height = "100%";
-                    creatorContainer.style.display = "flex";
-                    creatorContainer.style.justifyContent = "center";
-                    creatorContainer.style.alignItems = "center";
-                    creatorContainer.style.flexDirection = "column";
-                    creatorContainer.style.fontSize = "20px";
-                    creatorContainer.style.fontWeight = 700;
-                    creatorContainer.innerHTML = "Something went wrong...<emoji>🧐</emoji>";
-                    objectCreatorMenuDOM.appendChild(creatorContainer)
+                case ("add_block"):
                     break;
                 case ("locked"):
                     creatorContainer.style.width = "100%";
@@ -609,8 +608,22 @@
                     creatorContainer.innerHTML = "Sorry this feature doesn't exist yet...<emoji>😔</emoji>";
                     objectCreatorMenuDOM.appendChild(creatorContainer)
                     break;
+                case ("error"):
+                default:
+                    creatorContainer.style.width = "100%";
+                    creatorContainer.style.height = "100%";
+                    creatorContainer.style.display = "flex";
+                    creatorContainer.style.justifyContent = "center";
+                    creatorContainer.style.alignItems = "center";
+                    creatorContainer.style.flexDirection = "column";
+                    creatorContainer.style.fontSize = "20px";
+                    creatorContainer.style.fontWeight = 700;
+                    creatorContainer.innerHTML = "Something went wrong...<emoji>🧐</emoji>";
+                    objectCreatorMenuDOM.appendChild(creatorContainer)
+                    break;
             }
         }
+        const testingUI = "add_block";
         /**
          * Makes me insane.
          * @param {boolean} [enabled]
@@ -638,7 +651,11 @@
                     console.warn("The object creator has been activated without any object type to show. Using error screen as default value.")
                     configureObjectCreator("error");
                 } else {
-                    configureObjectCreator(objectType);
+                    if (objectType == testingUI) {
+                        configureObjectCreator(objectType, true);
+                    } else {
+                        configureObjectCreator(objectType);
+                    }
                 }
                 objectCreatorMenuDOMContainer.style.display = "flex";
                 setTimeout(()=>{
@@ -671,7 +688,7 @@
             switch(elementType) {
                 case ("add_block"):
                     modElements.push({name: "Superblock", desc: "A very, very cool block.", operation: "added"})
-                    toggleObjectCreator(true)
+                    toggleObjectCreator(true, "add_block")
                     break;
                 case ("add_item"):
                     modElements.push({name: "Superitem", desc: "A very, very cool item.", operation: "added"})
