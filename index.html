@@ -299,7 +299,7 @@
             height: calc(100vh - 240px);
             min-width: 400px;
             min-height: 300px;
-            border-radius: 18px;
+            border-radius: 30px;
             opacity: 0;
             transition: opacity 0.2s;
             pointer-events: all;
@@ -483,9 +483,12 @@
     </div>
     <div id="objectCreationMenuContainer">
         <div id="objectCreationMenu">
-            <div style="width: calc(100% - 20px); height: calc(100% - 20px); margin: 10px;">
-                <div style="height: 150px; width: 100%; border-radius: 10px; background-color: red;">
-                    
+            <div style="width: calc(100% - 40px); height: calc(100% - 40px); margin: 20px;">
+                <div style="height: 140px; width: clac(100%-20px); border-radius: 20px; background-color: red; padding: 10px; display: flex; flex-direction: row;">
+                    <div style="height: 140px; width: 140px; border-radius: 10px; background-color: aqua;">
+                    </div>
+                    <label for="fname">First Name</label>
+                    <input type="text" id="fname" name="firstname" placeholder="Your name..">
                 </div>
             </div>
         </div>
