@@ -10,10 +10,71 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/87b26c3ff4.js" crossorigin="anonymous"></script>
     <style>
+        @font-face {
+            font-family: Monaco;
+            src: url("monaco.ttf");
+        }
         body {
+            --very-light-color: #4b4b4b;
+            --light-color: #3d3d3d;
+            --gray-color: #333333;
+            --dark-color: #2f2f2f;
+            --very-dark-color: #2b2b2b;
+            --full-textcolor: #ffffff;
+            --very-light-textcolor: #cdcdcd;
+            --light-textcolor: #a2a2a2;
+            --medium-textcolor: #7c7c7c;
+            --dark-textcolor: #525252;
+            --locked-textcolor: #924141;
+            --locked-highlight-textcolor: #6d4646;
+            --highlight-border: rgba(255, 102, 0, 0.3);
+            --element-border: #2c2c2c;
+            --element-border-hover: var(--medium-textcolor);
+            --add-border: #04350a;
+            --add-border-hover: #00790e;
+            --edit-border: #4a1900;
+            --edit-border-hover: #8a4800;
+            --orange-color: #df891a;
+            --orange-highlight-color: #ffa126;
             margin: 0;
-            background-color: #3d3d3d;
+            background-color: var(--light-color);
             /* overflow-y: hidden; */
+        }
+        body.magneta {
+            --very-light-color: #ff00fb;
+            --light-color: #ff00fb;
+            --gray-color: #ff00fb;
+            --dark-color: #ff00fb;
+            --very-light-textcolor: #ff00fb;
+            --light-textcolor: #ff00fb;
+            --medium-textcolor: #ff00fb;
+            --dark-textcolor: #ff00fb;
+            --locked-textcolor: #ff00fb;
+            --locked-highlight-textcolor: #ff00fb;
+        }
+        body.debug {
+            --very-light-color: #ff0000;
+            --light-color: #ff8800;
+            --gray-color: #fbff00;
+            --dark-color: #77ff00;
+            --very-light-textcolor: #3c00ff;
+            --light-textcolor: #9900ff;
+            --medium-textcolor: #ff00fb;
+            --dark-textcolor: #ff0033;
+            --locked-textcolor: #00ffdd;
+            --locked-highlight-textcolor: #008cff;
+        }
+        body.light {
+            --very-light-color: #ffffff;
+            --light-color: #e9e9e9;
+            --gray-color: #c2c2c2;
+            --dark-color: #b1b1b1;
+            --very-light-textcolor: #010101;
+            --light-textcolor: #010101;
+            --medium-textcolor: #373737;
+            --dark-textcolor: #5f5f5f;
+            --locked-textcolor: #e65e5e;
+            --locked-highlight-textcolor: #7d5353;
         }
         emoji {
             font-size: 30px;
@@ -22,7 +83,7 @@
         .elements {
             width: 300px;
             height: calc(100vh - 30px);
-            background-color: #333333;
+            background-color: var(--gray-color);
             border-radius: 15px 0px 15px 15px;
         }
         .element_holder {
@@ -55,7 +116,7 @@
             width: 100%;
             height: 65px;
             border-radius: 15px;
-            background-color: #2f2f2f;
+            background-color: var(--dark-color);
             cursor: pointer;
             display: flex;
             flex-direction: row;
@@ -67,7 +128,7 @@
             cursor: not-allowed;
         }
         .elements_divisor {
-            color: #7c7c7c;
+            color: var(--medium-textcolor);
             font-family: Nunito;
             font-weight: 700;
             font-size: 20px;
@@ -79,9 +140,9 @@
             margin: 5px;
             width: 55px;
             height: 55px;
-            background-color: #333333;
+            background-color: var(--gray-color);
             transition: color 0.2s, font-size 0.2s;
-            color: #7c7c7c;
+            color: var(--medium-textcolor);
             flex-shrink: 0;
             display: flex;
             align-items: center;
@@ -93,7 +154,7 @@
             font-size: 15px;
             padding-right: 30px;
             padding-bottom: 30px;
-            color: #924141;
+            color: var(--locked-textcolor);
         }
         .element .image_container .beta {
             position: absolute;
@@ -112,7 +173,7 @@
         .element .image_container .broken {
             position: absolute;
             font-size: 12px;
-            margin-left: 20px;
+            margin-left: 1px;
             margin-bottom: 40px;
             color: #ffffff;
             font-family: Nunito;
@@ -123,22 +184,33 @@
             padding: 1px;
             padding-bottom: 0.5px;
         }
+        .element.locked .image_container .beta {
+            color: #979797;
+            background-color: rgb(156, 102, 0);
+        }
+        .element.locked .image_container .broken {
+            color: #979797;
+            background-color: rgb(120, 0, 0);
+        }
         .element:hover .image_container {
-            color: #a2a2a2;
+            color: var(--light-textcolor);
             font-size: 32px;
         }
+        .element:hover:active .image_container {
+            font-size: 28px!important;
+        }
         .element.locked .image_container {
-            color: #525252;
+            color: var(--dark-textcolor);
         }
         .element.locked:hover .image_container {
-            color: #6d4646;
+            color: var(--locked-highlight-textcolor);
         }
         .element .desc {
             margin: 5px;
             margin-left: 0px;
             padding-top: 3px;
             transition: color 0.2s, font-size 0.2s;
-            color: #7c7c7c;
+            color: var(--medium-textcolor);
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -155,38 +227,41 @@
         }
         .element:hover .desc name {
             font-weight: 800;
-            color: #a2a2a2;
+            color: var(--light-textcolor);
         }
         .element.locked .desc {
-            color: #525252;
+            color: var(--dark-textcolor);
         }
         .element.locked:hover .desc name {
-            color: #6d4646;
+            color: var(--locked-highlight-textcolor);
         }
         .element.locked:hover .desc {
-            color: #6d4646;
+            color: var(--locked-highlight-textcolor);
         }
         #add_element_button {
             width: 60px;
             height: 60px;
-            background-color: #333333;
+            background-color: var(--gray-color);
             border-radius: 0px 15px 15px 0px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #7c7c7c;
+            color: var(--medium-textcolor);
             transition: color 0.2s, font-size 0.2s, width 0.3s;
             font-size: 20px;
         }
         #add_element_button:hover {
-            color: #a2a2a2;
+            color: var(--light-textcolor);
             font-size: 22px;
+        }
+        #add_element_button:hover:active {
+            font-size: 18px!important;
         }
         #add_element_button_plus {
             transition: transform 0.5s, margin-right 0.3s;
         }
         .concave-corner {
-            background-color: #333333;
+            background-color: var(--gray-color);
             clip-path: url(#inward-circle);
             transition: clip-path 0.5s ease-in-out, width 0.3s, height 0.3s;
             padding: 0;
@@ -202,6 +277,7 @@
             margin-left: 15px;
             transform: translateX(-315px);
             transition: transform 0.3s;
+            z-index: 10;
         }
         #sidebarWhitespace {
             width: 100%;
@@ -210,6 +286,7 @@
             top: 0;
             left: 0;
             pointer-events: none;
+            z-index: 5;
         }
         #objectList {
             padding: 25px;
@@ -234,36 +311,36 @@
             background-color: #aaaaaa;
         }
         .objectElement {
-            background-color: #3d3d3d;
+            background-color: var(--light-color);
             height: 75px;
             border-radius: 15px;
-            border: #2c2c2c 3px solid;
-            transition: border-color 0.3s, color 0.3s;
+            border: var(--element-border) 3px solid;
+            transition: border-color 0.3s, color 0.3s, opacity 0.3s, tranform 0.3s;
             user-select: none;
             cursor: pointer;
             font-family: Nunito;
-            color: #7c7c7c;
+            color: var(--medium-textcolor);
         }
         .objectElement:hover {
-            border-color: #7c7c7c;
-            color: #a2a2a2;
+            border-color: var(--element-border-hover);
+            color: var(--light-textcolor);
         }
         .objectElement.added {
-            border: #04350a 3px solid;
+            border: var(--add-border) 3px solid;
         }
         .objectElement.added:hover {
-            border-color: #00790e;
+            border-color: var(--add-border-hover);
         }
         .objectElement.edited {
-            border: #4a1900 3px solid;
+            border: var(--edit-border) 3px solid;
         }
         .objectElement.edited:hover {
-            border-color: #8a4800;
+            border-color: var(--edit-border-hover);
         }
         .objectIcon {
             height: 55px;
             width: 55px;
-            background-color: #2f2f2f;
+            background-color: var(--dark-color);
             border-radius: 5px;
             margin: 10px;
             float: left;
@@ -279,40 +356,13 @@
             font-size: 16px;
             margin-bottom: 4px;
         }
-        #objectCreationMenuContainer {
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            justify-content: center;
-            align-items: center;
-            top: 0;
-            left: 0;
-            background-color: #0000003e;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        #objectCreationMenu {
-            background-color: #2f2f2f;
-            box-shadow: 0px 2px 8px -2px rgb(0 0 0 / 0.8);
-            width: calc(100vw - 480px);
-            height: calc(100vh - 240px);
-            min-width: 400px;
-            min-height: 300px;
-            border-radius: 30px;
-            opacity: 0;
-            transition: opacity 0.2s;
-            pointer-events: all;
-            font-family: Nunito;
-            color: #7c7c7c;
-        }
         #titleCard {
             position: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            background-color: #3d3d3d;
+            background-color: var(--light-color);
             top: 0;
             left: 0;
             width: 100%;
@@ -328,7 +378,7 @@
             transition: width 0.3s, height 0.3s;
         }
         #titleCardButton {
-            background-color: #333333;
+            background-color: var(--gray-color);
             font-family: Nunito;
             font-size: 1.8rem;
             margin: 10px;
@@ -336,15 +386,308 @@
             padding-block: 10px;
             border-radius: 12px;
             font-weight: 600;
-            color: #a2a2a2;
+            color: var(--medium-textcolor);
             cursor: pointer;
             transition: color 0.3s, border-radius 0.3s, padding-inline 0.3s, transform 0.3s;
             white-space: nowrap;
         }
         #titleCardButton:hover {
-            color: #cacaca;
+            color: var(--light-textcolor);
             padding-inline: 22px;
             border-radius: 16px;
+        }
+        /* Objectcreation-Menu */
+        #objectCreationMenuContainer {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+            background-color: #0000003e;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 30;
+        }
+        #objectCreationMenu {
+            background-color: var(--dark-color);
+            box-shadow: 0px 2px 8px -2px rgb(0 0 0 / 0.8);
+            width: calc(100vw - 480px);
+            height: calc(100vh - 240px);
+            min-width: 427px;
+            min-height: 300px;
+            border-radius: 30px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: all;
+            font-family: Nunito;
+            color: var(--medium-textcolor);
+            z-index: 35;
+        }
+        .objectCreationMenuScrollable {
+            height: calc(100% - 50px);
+            overflow-y: auto;
+            border-radius: .75rem;
+        }
+        .objectCreationMenuScrollable::-webkit-scrollbar {
+            width: 8px;
+        }
+        .objectCreationMenuScrollable::-webkit-scrollbar-track {
+            background-color: #555555;
+            border-radius: 5px;
+        }
+        .objectCreationMenuScrollable::-webkit-scrollbar-thumb {
+            background-color: #888888;
+            border-radius: 5px;
+        }
+        .objectCreationMenuScrollable::-webkit-scrollbar-thumb:hover {
+            background-color: #aaaaaa;
+        }
+        .objectCreationMenuTitle {
+            margin-left: 10px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        #objectCreationMenuNameInput {
+            font-family: Nunito;
+            line-height: 1.15;
+            margin: 0;
+            outline: 2px solid transparent!important;
+            appearance: none!important;
+            background: var(--dark-color);
+            border: none;
+            border-radius: .75rem;
+            box-shadow: 0 0 0 0px transparent;
+            box-sizing: border-box;
+            color: var(--very-light-textcolor);
+            font-size: 16px;
+            font-weight: 600;
+            width: 218px;
+            min-height: 40px;
+            padding: 10px 20px;
+            transition: box-shadow .1s ease-in-out;
+            cursor: pointer;
+            margin-bottom: 6px;
+        }
+        #objectCreationMenuNameInput.lang {
+            font-family: Monaco;
+        }
+        #objectCreationMenuNameInput:focus {
+            box-shadow: 0 0 0 3px var(--highlight-border);
+            cursor: text;
+        }
+        #objectCreationMenuNameInput::placeholder {
+            color: var(--dark-textcolor);
+        }
+        #objectCreationMenuNameTitle {
+            margin-bottom: 8px;
+            line-height: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 2px;
+            cursor: default;
+        }
+        .objectCreationMenuNameArea {
+            display: flex;
+            flex-direction: column;
+            margin-left: 15px;
+            box-sizing: border-box;
+        }
+        .objectCreationMenuNameTypeSelection {
+            display: flex;
+            flex-direction: row;
+            margin: 0px;
+            box-sizing: border-box;
+            gap: 6px;
+        }
+        .objectCreationMenuNameType {
+            cursor: pointer;
+            background-color: var(--light-color);
+            width: 50px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: color 0.3s, background-color 0.3s;
+            font-size: 16px;
+        }
+        .objectCreationMenuNameType.active {
+            background-color: var(--very-light-color);
+            color: var(--light-textcolor);
+        }
+        .objectCreationMenuNameType:hover {
+            color: var(--light-textcolor);
+            font-size: 18px;
+        }
+        .objectCreationMenuNameType i {
+            transition: transform 0.3s;
+            transform: rotate(0deg);
+        }
+        .objectCreationMenuNameType:hover i {
+            transform: rotate(20deg) scale(1.1);
+        }
+        .objectCreationMenuNameType:hover:active i {
+            transform: rotate(20deg) scale(0.8);
+        }
+        .objectCreationMenuPreview {
+            height: 100px;
+            width: clac(100% - 20px);
+            border-radius: 20px;
+            background-color: var(--gray-color);
+            padding: 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #objectCreationMenuPreviewDisplay {
+            height: 100px;
+            width: 100px;
+            border-radius: 10px;
+            background-color: var(--light-color);
+            position: relative;
+        }
+        #objectCreationMenuPreviewDisplayMissing {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+        }
+        .objectCreationMenuPreviewDisplayUpload {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+        #objectCreationMenuPreviewDisplayUploadButton {
+            height: 32px;
+            width: 32px;
+            background-color: var(--gray-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: color 0.3s, background-color 0.3s;
+            font-size: 16px;
+        }
+        #objectCreationMenuPreviewDisplayUploadButton:hover {
+            color: var(--light-textcolor);
+            background-color: var(--dark-color);
+        }
+        #objectCreationMenuPreviewDisplayUploadButton i {
+            transition: transform 0.3s;
+        }
+        #objectCreationMenuPreviewDisplayUploadButton:hover i {
+            transform: scale(1.2);
+        }
+        #objectCreationMenuPreviewDisplayUploadButton:hover:active i {
+            transform: scale(0.8)!important;
+        }
+        .objectCreationMenuChangeHolderContainer {
+            position: absolute;
+            bottom: 0;
+            height: 50px;
+            width: 100%;
+        }
+        .objectCreationMenuChangeHolder {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+        }
+        #objectCreationMenuChangeCancel {
+            background-color: var(--light-color);
+            color: var(--medium-textcolor);
+            margin: 5px;
+            padding-block: 6px;
+            padding-inline: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: color 0.3s, background-color 0.3s;
+            cursor: pointer;
+        }
+        #objectCreationMenuChangeCancel:hover {
+            background-color: var(--very-light-color);
+            color: var(--light-textcolor);
+        }
+        #objectCreationMenuChangeSave {
+            background-color: var(--orange-color);
+            color: var(--full-textcolor);
+            margin: 5px;
+            padding-block: 6px;
+            padding-inline: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: color 0.3s, background-color 0.3s;
+            cursor: pointer;
+        }
+        #objectCreationMenuChangeSave:hover {
+            background-color: var(--orange-highlight-color);
+            color: var(--full-textcolor);
+        }
+        #objectCreationMenuDescriptionLabel {
+            margin-bottom: 8px;
+            line-height: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: default;
+        }
+        #objectCreationMenuDescription {
+            font-family: Nunito;
+            font-size: 16px;
+            margin: 5px;
+            overflow: auto;
+            appearance: none!important;
+            box-sizing: border-box;
+            background: var(--very-dark-color);
+            border: none;
+            box-shadow: 0 0 0 0 transparent;
+            color: var(--light-textcolor);
+            font-weight: 600;
+            min-height: 40px;
+            outline: 2px solid transparent;
+            padding: .8rem 1rem;
+            transition: box-shadow .1s ease-in-out;
+            border-radius: .75rem;
+            width: calc(100% - 10px);
+            overflow-y: auto;
+            resize: none;
+            cursor: pointer;
+        }
+        #objectCreationMenuDescription:focus {
+            box-shadow: 0 0 0 3px var(--highlight-border);
+            cursor: text;
+        }
+        #objectCreationMenuDescription::placeholder {
+            color: var(--dark-textcolor);
+        }
+        #additional-information::-webkit-scrollbar {
+            width: 8px;
+        }
+        #additional-information::-webkit-scrollbar-track {
+            background-color: #555555;
+            border-radius: 5px;
+        }
+        #additional-information::-webkit-scrollbar-thumb {
+            background-color: #888888;
+            border-radius: 5px;
+        }
+        #additional-information::-webkit-scrollbar-thumb:hover {
+            background-color: #aaaaaa;
         }
     </style>
 </head>
@@ -422,7 +765,17 @@
                         </div>
                         <div class="desc">
                             <name>Lang</name>
-                            Change how text is displayed between languages.
+                            Allows for localsation of text ingame.
+                        </div>
+                    </div>
+                    <div class="element locked" aria-label="Add an Graphical User Interface" onclick="addObjectDom('add_gui')">
+                        <div class="image_container">
+                            <i class="fa-regular fa-window-restore"></i>
+                            <i class="fa-solid fa-lock locked_icon"></i>
+                        </div>
+                        <div class="desc">
+                            <name>GUI</name>
+                            Adds an user interface that can have for buttons or text displayed.
                         </div>
                     </div>
                     <div class="element locked" aria-label="Add biome (broken)" onclick="addObjectDom('add_biome')">
@@ -433,7 +786,7 @@
                         </div>
                         <div class="desc">
                             <name>Biomes</name>
-                            Changes how Minecraft generates the world.
+                            Adds new types of terrain for Minecraft to generate.
                         </div>
                     </div><br>
                     <div class="elements_divisor">---- EDIT TEXTURES ----</div>
@@ -469,7 +822,7 @@
     </div>
     <!-- <div style="display: flex; justify-content: center; width: 100%; padding-top: 30px; padding-bottom: 10px;"><img src="iconModMaker.png" alt="" height="70px"></div> -->
     <div style="width: calc(100% - 20px); height: calc(100vh - 20px); padding: 10px;">
-        <div style="margin: 20px; background-color: #4b4b4b; height: calc(100% - 40px); border-radius: 20px;">
+        <div style="margin: 20px; background-color: var(--very-light-color); height: calc(100% - 40px); border-radius: 20px;">
             <div id="objectList">
                 <div class="objectElement">
                     <div class="objectIcon"></div>
@@ -483,12 +836,63 @@
     </div>
     <div id="objectCreationMenuContainer">
         <div id="objectCreationMenu">
-            <div style="width: calc(100% - 40px); height: calc(100% - 40px); margin: 20px;">
-                <div style="height: 140px; width: clac(100%-20px); border-radius: 20px; background-color: red; padding: 10px; display: flex; flex-direction: row;">
-                    <div style="height: 140px; width: 140px; border-radius: 10px; background-color: aqua;">
+            <div style="width: calc(100% - 40px); height: calc(100% - 40px); margin: 20px; position: relative;">
+                <div class="objectCreationMenuScrollable">
+                    <div class="objectCreationMenuTitle">Add Block</div>
+                    <div class="objectCreationMenuPreview">
+                        <div id="objectCreationMenuPreviewDisplay">
+                            <div id="objectCreationMenuPreviewDisplayMissing">
+                                <i class="fa-solid fa-question"></i>
+                            </div>
+                            <div class="objectCreationMenuPreviewDisplayUpload">
+                                <div id="objectCreationMenuPreviewDisplayUploadButton">
+                                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="objectCreationMenuNameArea">
+                            <label for="objectCreationMenuNameInput" id="objectCreationMenuNameTitle">Block Name:</label>
+                            <!-- <label for="objectCreationMenuName" id="objectCreationMenuNameTitle">Block ID:</label> -->
+                            <input id="objectCreationMenuNameInput" type="text" name="blockname" maxlength="64" placeholder="Netherite slab" autocomplete="off">
+                            <!-- <input id="objectCreationMenuName" class="lang" type="text" name="blockname" maxlength="64" placeholder="mod.netherite_slab" autocomplete="off"> -->
+                            <div class="objectCreationMenuNameTypeSelection">
+                                <div id="objectCreationMenuNameTypeManual" class="objectCreationMenuNameType active">
+                                    <i class="fa-solid fa-pen"></i>
+                                </div>
+                                <div id="objectCreationMenuNameTypeLang" class="objectCreationMenuNameType">
+                                    <i class="fa-solid fa-file"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <label for="fname">First Name</label>
-                    <input type="text" id="fname" name="firstname" placeholder="Your name..">
+                    <label for="objectCreationMenuDescription" id="objectCreationMenuDescriptionLabel">Description:</label>
+                    <textarea id="objectCreationMenuDescription" maxlength="256" placeholder="Optional"></textarea>
+                    
+                    Flammable
+                    breakable
+                    tools needed
+                    hardness
+                    blast resistant
+                    3d model
+                    bounding boxes?
+                    hit boxes?
+                    tooltip
+                    rarity
+                    affected by gravity
+                    item model
+                    wearable?
+                    recipe (linked with other object)
+                    animations
+                </div>
+                <div class="objectCreationMenuChangeHolderContainer">
+                    <div class="objectCreationMenuChangeHolder">
+                        <div id="objectCreationMenuChangeCancel" onclick="toggleObjectCreator(false)">
+                            Cancel
+                        </div>
+                        <div id="objectCreationMenuChangeSave">
+                            Save
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -520,6 +924,7 @@
         let openObjectCreatorMenu = false;
         let transitioningOpenObjectCreator = false;
         let modElements = [];
+        let previousModElements = [];
         function combineToString(str, amount, separator = "") {
             let endStr = "";
             for (let i = 0; i < amount; i++) {
@@ -530,6 +935,10 @@
                 }
             }
             return endStr
+        }
+        function randomID() {
+            const randomId = Math.random().toString(36).substr(2, 6);
+            return randomId;
         }
         function toggleSidebar(enabled = undefined) {
             let changeTo;
@@ -582,6 +991,10 @@
             document.getElementById("objectList").innerHTML = "";
             modElements.forEach((i, v) => {
                 let newElement = document.createElement("div");
+                if (!previousModElements.some(item => item.id === i.id)) {
+                    newElement.style.opacity = 0;
+                    newElement.style.transform = "scale(0.1)";
+                }
                 let classOperationType;
                 if (i.operation) {
                     switch (i.operation) {
@@ -606,9 +1019,22 @@
                         ${i.desc}
                     </div>`
                 document.getElementById("objectList").appendChild(newElement);
+                // if (!previousModElements.includes(i)) {
+                if (!previousModElements.some(item => item.id === i.id)) {
+                    setTimeout(()=>{
+                        newElement.style.transform = "scale(1)";
+                        newElement.style.opacity = 1;
+                    }, 100)
+                }
+                if (v == modElements.length-1) {
+                    setTimeout(()=>{
+                        previousModElements = structuredClone(modElements);
+                    }, 100)
+                }
             });
         }
         generateGridElements()
+        objectCreatorParams = { name: true }
         /**
          * configures the object creator
          * @param {string} objectType
@@ -623,6 +1049,107 @@
             let containerObjects = {};
             switch (objectType) {
                 case ("add_block"):
+                    objectCreatorParams.name = true;
+                    objectCreatorMenuDOM.innerHTML = `
+                        <div style="width: calc(100% - 40px); height: calc(100% - 40px); margin: 20px; position: relative;">
+                            <div class="objectCreationMenuScrollable">
+                                <div class="objectCreationMenuTitle">Add Block</div>
+                                <div class="objectCreationMenuPreview">
+                                    <div id="objectCreationMenuPreviewDisplay">
+                                        <div id="objectCreationMenuPreviewDisplayMissing">
+                                            <i class="fa-solid fa-question"></i>
+                                        </div>
+                                        <div class="objectCreationMenuPreviewDisplayUpload">
+                                            <div id="objectCreationMenuPreviewDisplayUploadButton">
+                                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="objectCreationMenuNameArea">
+                                        <label for="objectCreationMenuNameInput" id="objectCreationMenuNameTitle">Block Name:</label>
+                                        <!-- <label for="objectCreationMenuName" id="objectCreationMenuNameTitle">Block ID:</label> -->
+                                        <input id="objectCreationMenuNameInput" type="text" name="blockname" maxlength="64" placeholder="Netherite slab" autocomplete="off">
+                                        <!-- <input id="objectCreationMenuName" class="lang" type="text" name="blockname" maxlength="64" placeholder="mod.netherite_slab" autocomplete="off"> -->
+                                        <div class="objectCreationMenuNameTypeSelection">
+                                            <div id="objectCreationMenuNameTypeManual" class="objectCreationMenuNameType active">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </div>
+                                            <div id="objectCreationMenuNameTypeLang" class="objectCreationMenuNameType">
+                                                <i class="fa-solid fa-file"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="objectCreationMenuDescription" id="objectCreationMenuDescriptionLabel">Description:</label>
+                                <textarea id="objectCreationMenuDescription" maxlength="256" placeholder="Optional"></textarea>
+
+                                Flammable
+                                breakable
+                                tools needed
+                                hardness
+                                blast resistant
+                                3d model
+                                bounding boxes?
+                                hit boxes?
+                                tooltip
+                                rarity
+                                affected by gravity
+                                item model
+                                wearable?
+                                recipe (linked with other object)
+                                animations
+                            </div>
+                            <div class="objectCreationMenuChangeHolderContainer">
+                                <div class="objectCreationMenuChangeHolder">
+                                    <div id="objectCreationMenuChangeCancel" onclick="toggleObjectCreator(false)">
+                                        Cancel
+                                    </div>
+                                    <div id="objectCreationMenuChangeSave">
+                                        Save
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    document.getElementById("objectCreationMenuNameTypeManual").addEventListener('click', (event)=>{
+                        if (!objectCreatorParams.name) {
+                            document.getElementById("objectCreationMenuNameTitle").innerText = "Block Name:";
+                            document.getElementById("objectCreationMenuNameInput").classList = "";
+                            document.getElementById("objectCreationMenuNameInput").placeholder = "Netherite slab";
+                            document.getElementById("objectCreationMenuNameTypeManual").classList = "objectCreationMenuNameType active";
+                            document.getElementById("objectCreationMenuNameTypeLang").classList = "objectCreationMenuNameType";
+                            objectCreatorParams.name = true;
+                        }
+                    });
+                    document.getElementById("objectCreationMenuNameTypeLang").addEventListener('click', (event)=>{
+                        if (objectCreatorParams.name) {
+                            document.getElementById("objectCreationMenuNameTitle").innerText = "Block ID:";
+                            document.getElementById("objectCreationMenuNameInput").classList = "lang";
+                            document.getElementById("objectCreationMenuNameInput").placeholder = "mod.netherite_slab";
+                            document.getElementById("objectCreationMenuNameTypeManual").classList = "objectCreationMenuNameType";
+                            document.getElementById("objectCreationMenuNameTypeLang").classList = "objectCreationMenuNameType active";
+                            objectCreatorParams.name = false;
+                        }
+                    });
+                    document.getElementById("objectCreationMenuChangeSave").addEventListener('click', (event)=>{
+                        let newObjectName = document.getElementById("objectCreationMenuNameInput").value;
+                        let newObjectDescription = document.getElementById("objectCreationMenuDescription").value;
+                        //title, desc, type, mode, params
+                        let newObjectInjectionPrep = {
+                            title: newObjectName,
+                            desc: newObjectDescription,
+                            type: "block",
+                            mode: "added",
+                            params: [
+
+                            ]
+                        }
+                        let newObjectInjection = [];
+                        for (const key in newObjectInjectionPrep) {
+                            newObjectInjection.push(newObjectInjectionPrep[key]);
+                        }
+                        createObjectPreview(...newObjectInjection);
+                        toggleObjectCreator(false);
+                    });
                     break;
                 case ("locked"):
                     creatorContainer.style.width = "100%";
@@ -651,7 +1178,7 @@
                     break;
             }
         }
-        const testingUI = "add_block";
+        const testingUI = "";
         /**
          * Makes me insane.
          * @param {boolean} [enabled]
@@ -675,6 +1202,7 @@
             let objectCreatorMenuDOMContainer = document.getElementById("objectCreationMenuContainer");
             let objectCreatorMenuDOM = document.getElementById("objectCreationMenu");
             if (changeTo) {
+                toggleSidebar(false);
                 if (objectType == undefined) {
                     console.warn("The object creator has been activated without any object type to show. Using error screen as default value.")
                     configureObjectCreator("error");
@@ -706,8 +1234,11 @@
                 }, 200)
             }
         }
-        document.getElementById("objectCreationMenuContainer").addEventListener('click', ()=>{
-            toggleObjectCreator(false);
+        document.getElementById("objectCreationMenuContainer").addEventListener('click', (event)=>{
+            const topElement = document.elementFromPoint(event.clientX, event.clientY);
+            if (topElement === event.currentTarget) {
+                toggleObjectCreator(false);
+            }
         });
         document.getElementById("sidebarWhitespace").addEventListener('click', ()=>{
             toggleSidebar(false);
@@ -715,11 +1246,11 @@
         function addObjectDom(elementType) {
             switch(elementType) {
                 case ("add_block"):
-                    modElements.push({name: "Superblock", desc: "A very, very cool block.", operation: "added"})
+                    // modElements.push({name: "Superblock", desc: "A very, very cool block.", operation: "added", id: randomID(), type: "block"})
                     toggleObjectCreator(true, "add_block")
                     break;
                 case ("add_item"):
-                    modElements.push({name: "Superitem", desc: "A very, very cool item.", operation: "added"})
+                    modElements.push({name: "Superitem", desc: "A very, very cool item.", operation: "added", id: randomID(), type: "item"})
                     toggleObjectCreator(true, "locked")
                     break;
                 case ("add_recipe"):
@@ -738,7 +1269,7 @@
                     toggleObjectCreator(true, "locked")
                     break;
                 case ("edit_block_texture"):
-                    modElements.push({name: "Grass Block", desc: "It looks cooler now.", operation: "edited"})
+                    modElements.push({name: "Grass Block", desc: "It looks cooler now.", operation: "edited", id: randomID(), type: "block"})
                     toggleObjectCreator(true, "locked")
                     break;
                 case ("edit_item_texture"):
@@ -746,6 +1277,11 @@
                     break;
             }
             generateGridElements()
+        }
+        function createObjectPreview(title, desc, type, mode, params) {
+            modElements.push({name: title, desc: desc, operation: mode, id: randomID(), type: type, params: structuredClone(params)});
+
+            generateGridElements();
         }
         if (!reloadedPage) {
             document.getElementById("titleCardButton").addEventListener('click', ()=>{
